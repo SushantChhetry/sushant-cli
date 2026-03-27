@@ -4,74 +4,91 @@
 
 A terminal-first CLI for product thinking, decision-making, and system design.
 
-It combines serious commands like `wwsd`, `redflag`, `breakdown`, and `visualize` with randomized personality commands like `art`, `joke`, and `flirt`.
-
-## Why this exists
-
-Most AI CLIs focus on code generation or generic chat. Sushant CLI is different.
-
-It is built to feel like a programmable version of senior product judgment in the terminal:
-
-- **WWSD**: what would Sushant do
-- **Breakdown**: turn a messy problem into a structured approach
-- **Redflag**: surface risk, irreversibility, and failure modes
-- **Visualize**: explain product or system ideas with terminal-friendly diagrams
-- **Art / Joke / Flirt**: randomized personality moments with zero input required
-
 ## Install
 
 ```bash
 npm install -g sushant-cli
 ```
 
-## Quick start
+## First-run setup (new default)
+
+Sushant CLI now uses a frictionless local setup flow:
+
+1. Install globally.
+2. Run `sushant`.
+3. If no valid local config is found, Sushant launches a setup wizard.
+4. Choose a provider, enter your API key securely, and optionally set a model.
+5. Config is saved locally and reused on future runs.
 
 ```bash
 sushant
+```
+
+## Supported providers
+
+- OpenAI (`OPENAI_API_KEY`)
+- Anthropic (`ANTHROPIC_API_KEY`)
+
+The configuration model is provider-agnostic so additional providers can be added without changing the main auth shape.
+
+## Authentication and config commands
+
+- `sushant login` → run setup wizard explicitly
+- `sushant logout` → remove local config
+- `sushant whoami` → show current provider/model with redacted key
+- `sushant config` → show safe redacted config
+- `sushant config set provider <openai|anthropic>`
+- `sushant config set model <model-name>`
+
+## Credential resolution order
+
+For AI-backed commands (`wwsd`, `breakdown`, `redflag`, `visualize`) and no-args interactive mode:
+
+1. Local config file
+2. Environment variables
+3. Interactive setup wizard
+
+If local config is malformed, the CLI guides you into repair through the same setup wizard.
+
+## Local config storage
+
+Config is stored in a user-level directory:
+
+- macOS/Linux (XDG aware): `$XDG_CONFIG_HOME/sushant/config.json` or `~/.config/sushant/config.json`
+- Windows: `%APPDATA%\\sushant\\config.json`
+
+Example structure:
+
+```json
+{
+  "provider": "openai",
+  "providerConfig": {
+    "apiKey": "SECRET",
+    "model": "gpt-5-mini"
+  }
+}
+```
+
+## Environment variables (advanced / fallback)
+
+Environment variables are still supported when no local config exists:
+
+- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY`
+- Optional model overrides:
+  - `OPENAI_MODEL`
+  - `ANTHROPIC_MODEL`
+  - `SUSHANT_MODEL` (generic fallback)
+
+## Quick command examples
+
+```bash
+sushant
+sushant login
+sushant whoami
 sushant wwsd "Should we automate tax intake via SMS?"
 sushant redflag "AI agent that auto-submits claims"
-sushant breakdown "Users are dropping off in onboarding"
-sushant visualize "high-risk AI workflow"
-sushant art
-sushant joke
-sushant flirt
-```
-
-## Commands
-
-### Core commands
-
-- `sushant wwsd "<problem>"`
-- `sushant breakdown "<problem>"`
-- `sushant redflag "<idea>"`
-- `sushant visualize "<system or concept>"`
-
-### Randomized commands
-
-- `sushant art`
-- `sushant joke`
-- `sushant flirt`
-
-### Interactive mode
-
-Run without arguments to launch the terminal menu:
-
-```bash
-sushant
-```
-
-## Environment
-
-Create a `.env` file from `.env.example`.
-
-```bash
-cp .env.example .env
-```
-
-Then add your API key:
-
-```bash
-OPENAI_API_KEY=your_key_here
+sushant config
 ```
 
 ## Local development
@@ -82,52 +99,11 @@ npm run dev
 npm run build
 ```
 
-## Project structure
-
-```text
-sushant-cli/
-├── bin/
-│   └── sushant.js
-├── docs/
-│   ├── architecture.md
-│   └── publishing.md
-├── src/
-│   ├── ai/
-│   ├── commands/
-│   ├── config/
-│   ├── content/
-│   ├── interactive/
-│   ├── utils/
-│   └── index.ts
-├── .env.example
-├── .gitignore
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
-## Design principles
-
-- **Terminal-native**: simple install, direct command execution, interactive mode
-- **Opinionated**: not a generic AI shell
-- **Shareable**: outputs should be screenshot-worthy
-- **Useful first**: serious commands anchor the product
-- **Personality second**: art, jokes, and flirt add memorability without diluting the core
-
 ## Docs
 
 - [Architecture](./docs/architecture.md)
+- [Configuration](./docs/configuration.md)
 - [Publishing](./docs/publishing.md)
-- [Build guide](./docs/build-guide.mdx)
-
-## Roadmap
-
-- Better interactive mode with command history
-- Streaming output for long analyses
-- Model provider abstraction
-- More curated art, jokes, and flirt lines
-- Configurable output themes
-- Optional `--json` mode for automation
 
 ## License
 
