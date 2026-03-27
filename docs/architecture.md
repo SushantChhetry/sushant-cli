@@ -1,46 +1,42 @@
 # Architecture
 
-Sushant CLI is designed around two layers:
+Sushant CLI is organized into modular layers so auth/config and command UX can grow independently.
 
-## 1. Command Layer
+## 1. Command Layer (`src/index.ts`, `src/commands/*`)
 
-Handles CLI inputs via Commander and routes to:
+Commander routes input into:
 
-- wwsd
-- breakdown
-- redflag
-- visualize
-- art
-- joke
-- flirt
+- AI-backed commands (`wwsd`, `breakdown`, `redflag`, `visualize`)
+- Utility commands (`art`, `joke`, `flirt`)
+- Auth/config commands (`login`, `logout`, `whoami`, `config`)
 
-## 2. Execution Layer
+## 2. Configuration Layer (`src/config/*`)
 
-### AI-driven commands
+- `types.ts`: provider-agnostic typed config contracts
+- `providers.ts`: metadata per provider (display name, env var, default model)
+- `store.ts`: cross-platform local storage read/write/remove + shape validation
+- `resolve.ts`: credential resolution orchestration
 
-Use an LLM client to:
-- generate structured outputs
-- enforce tone and style
+Resolution priority:
 
-### Randomized commands
+1. Local config file
+2. Environment variables
+3. Interactive setup wizard
 
-Use curated content pools for:
-- jokes
-- flirts
-- ascii art
+## 3. Interactive Layer (`src/interactive/*`)
 
-## 3. Interactive Layer
+- `setupWizard.ts`: first-run and repair-mode setup flow
+- `menu.ts`: no-arg interactive mode entrypoint
 
-Uses Inquirer to simulate a menu-driven CLI.
+No-arg behavior:
 
-## 4. Output Layer
+- if config exists/resolves, open interactive menu
+- if config missing/invalid, run setup wizard first, then continue
 
-Uses chalk and formatting utilities to:
-- create consistent terminal outputs
-- maintain a recognizable style
+## 4. Safety & Output Layer (`src/utils/*`)
 
-## Philosophy
+- `redact.ts`: secret masking for safe terminal output
 
-This CLI is not meant to be a general-purpose assistant.
+## Extensibility direction
 
-It is intentionally opinionated and encodes a specific style of thinking.
+The auth model avoids provider-specific assumptions so future additions (e.g., OpenRouter, OAuth, “Sign in with Sushant”) can be added without breaking config consumers.
