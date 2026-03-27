@@ -8,12 +8,11 @@
   },
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "npx --yes --package=typescript -- tsc",
+    "build": "node ./node_modules/typescript/lib/tsc.js",
     "start": "node dist/index.js",
     "pack:dist": "npm pack",
     "release:brew-formula": "npm run pack:dist && node scripts/release/create-homebrew-formula.mjs",
     "release:rpm": "npm run pack:dist && bash scripts/release/build-rpm.sh",
-    "prepare": "npm run build",
     "prepack": "npm run build"
   },
   "dependencies": {
