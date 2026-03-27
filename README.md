@@ -6,9 +6,39 @@ A terminal-first CLI for product thinking, decision-making, and system design.
 
 ## Install
 
+### npm (stable)
+
 ```bash
 npm install -g sushant-cli
 ```
+
+### npm from GitHub (for end-to-end testing before publish)
+
+```bash
+npm install -g github:SushantChhetry/sushant-cli
+```
+
+This path now works because git installs run `prepare`, which builds `dist/` before linking the `sushant` bin.
+
+### Homebrew (maintainer/distributor flow)
+
+Sushant now includes a Homebrew formula generator for taps:
+
+```bash
+npm run release:brew-formula
+```
+
+This writes `packaging/homebrew/sushant-cli.rb`, which can be committed to your tap repo and installed with `brew install <tap>/sushant-cli`.
+
+### RPM (maintainer/distributor flow)
+
+Sushant now includes RPM packaging files and a build helper:
+
+```bash
+npm run release:rpm
+```
+
+Requirements: `rpmbuild` + `nodejs`.
 
 ## First-run setup (new default)
 
