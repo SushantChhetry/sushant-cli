@@ -74,4 +74,4 @@ npm install -g github:SushantChhetry/sushant-cli
 sushant --help
 ```
 
-This depends on the `prepare` script to build `dist/` during git installs.
+Git installs use the `dist/` tree committed in the repository (no `prepare` build on install). Run `npm run build` locally before you commit when you change `src/`.

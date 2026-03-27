@@ -6,19 +6,31 @@ A terminal-first CLI for product thinking, decision-making, and system design.
 
 ## Install
 
-### npm (stable)
+### One-liner (like Claude’s curl installer)
+
+Requires [Node.js](https://nodejs.org) (npm on your `PATH`). Then:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/SushantChhetry/sushant-cli/main/scripts/install.sh | bash
+```
+
+Override the repo with `SUSHANT_CLI_REPO=YourOrg/your-fork` if you fork.
+
+Claude Code’s default flow is a native script plus Homebrew; this is the closest parallel for a Node-based CLI—one command, no clone.
+
+### npm (after you publish to the registry)
 
 ```bash
 npm install -g sushant-cli
 ```
 
-### npm from GitHub (for end-to-end testing before publish)
+### npm from GitHub
 
 ```bash
 npm install -g github:SushantChhetry/sushant-cli
 ```
 
-This path now works because git installs run `prepare`, which builds `dist/` before linking the `sushant` bin.
+The repo ships a prebuilt `dist/`, so this install does not run a TypeScript compile on your machine.
 
 ### Homebrew (maintainer/distributor flow)
 
