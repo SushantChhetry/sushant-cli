@@ -3,9 +3,9 @@ import { loginCommand } from './commands/login.js';
 import { logoutCommand } from './commands/logout.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { setConfigValueCommand, showConfigCommand } from './commands/config.js';
-import { resolveConfig } from './config/resolve.js';
-import { runSetupWizard } from './interactive/setupWizard.js';
 import { runInteractiveMenu } from './interactive/menu.js';
+import { runAiCommand } from './commands/ai.js';
+import { artCommand, jokeCommand, flirtCommand } from './commands/fun.js';
 
 const program = new Command();
 
@@ -14,22 +14,12 @@ program
   .description('Programmable product judgment in your terminal')
   .version('0.1.0');
 
-async function ensureAuth(): Promise<void> {
-  await resolveConfig({ runSetupWizard, allowPrompt: true });
-}
-
-function aiPlaceholder(commandName: string, input: string): void {
-  console.log(`${commandName}: ${input}`);
-  console.log('AI responses will use your configured provider and model in a follow-up phase.');
-}
-
 program
   .command('wwsd')
   .description('What would Sushant do?')
   .argument('<input>')
   .action(async (input) => {
-    await ensureAuth();
-    aiPlaceholder('WWSD', input);
+    await runAiCommand('wwsd', input);
   });
 
 program
@@ -37,8 +27,7 @@ program
   .description('Break down a messy problem into structure')
   .argument('<input>')
   .action(async (input) => {
-    await ensureAuth();
-    aiPlaceholder('Breakdown', input);
+    await runAiCommand('breakdown', input);
   });
 
 program
@@ -46,8 +35,7 @@ program
   .description('Find risks and failure modes')
   .argument('<input>')
   .action(async (input) => {
-    await ensureAuth();
-    aiPlaceholder('Redflag', input);
+    await runAiCommand('redflag', input);
   });
 
 program
@@ -55,13 +43,12 @@ program
   .description('Visualize a product/system concept')
   .argument('<input>')
   .action(async (input) => {
-    await ensureAuth();
-    aiPlaceholder('Visualize', input);
+    await runAiCommand('visualize', input);
   });
 
-program.command('art').action(() => console.log('Random ASCII art coming soon'));
-program.command('joke').action(() => console.log('Random joke coming soon'));
-program.command('flirt').action(() => console.log('Random flirt line coming soon'));
+program.command('art').description('Print random ASCII art').action(artCommand);
+program.command('joke').description('Tell a random product joke').action(jokeCommand);
+program.command('flirt').description('Generate a playful line').action(flirtCommand);
 
 program.command('login').description('Run setup wizard and save local credentials').action(loginCommand);
 program.command('logout').description('Remove local credentials/config').action(logoutCommand);
@@ -87,6 +74,5 @@ configCommand
 await program.parseAsync();
 
 if (!process.argv.slice(2).length) {
-  await ensureAuth();
   await runInteractiveMenu();
 }
