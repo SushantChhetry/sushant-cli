@@ -1,0 +1,25 @@
+{
+  "name": "sushant-cli",
+  "version": "0.1.0",
+  "description": "Programmable product judgment in your terminal.",
+  "type": "module",
+  "bin": {
+    "sushant": "./bin/sushant.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7",
+    "inquirer": "^12.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
