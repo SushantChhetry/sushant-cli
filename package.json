@@ -9,7 +9,12 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "pack:dist": "npm pack",
+    "release:brew-formula": "npm run pack:dist && node scripts/release/create-homebrew-formula.mjs",
+    "release:rpm": "npm run pack:dist && bash scripts/release/build-rpm.sh",
+    "prepare": "npm run build",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "chalk": "^5.4.1",
@@ -21,5 +26,12 @@
     "@types/node": "^22.13.10",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
-  }
+  },
+  "license": "MIT",
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
 }
